@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./phaser.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            overflow-x: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+
+        var config = {
+            type: Phaser.AUTO,
+            width: 1920, // 가로
+            height: 1595, // 세로
+            backgroundColor: '#fff',
+            physics: {
+                default: 'arcade',
+                arcade: {
+                    gravity: { y: 600 },
+                    debug: false
+                }
+            },
+            scene: {
+                preload: preload,
+                create: create,
+                update: update
+            }
+        };
+        localStorage.setItem("coin",0);
+
+
+        var character;
+        var platforms;
+        var cursors;
+        var score = localStorage.getItem("coin");
+        var scoreText;
+
+        let game = new Phaser.Game(config);
+
+        function preload() { // 이미지로드 등의 전처리
+            this.load.image('white', './white.png');
+            this.load.image('white2', './white2.png');
+            this.load.image('white3', './white3.jpg');
+            this.load.spritesheet('character', './character.png', { frameWidth: 32, frameHeight: 64 }); // 이미지 로드
+            this.load.spritesheet('coin', './coin.png', { frameWidth: 90, frameHeight: 92 });
+            this.load.image('button', './button.png');
+            this.load.image('door', './door.png');
+            this.load.image('box', './box.jpg');
+            this.load.image('tile', './tile.jpg');
+
+            this.load.image('bottom1', 'bottom/bottom1.png');
+            this.load.image('bottom2', 'bottom/bottom2.png');
+
+            this.load.image('logo1', 'logo/logo1.png');
+            this.load.image('logo2', 'logo/logo2.png');
+            this.load.image('logo3', 'logo/logo3.png');
+            this.load.image('logo4', 'logo/logo4.png');
+            this.load.image('logo5', 'logo/logo5.png');
+            this.load.image('logo6', 'logo/logo6.png');
+
+            this.load.image('top1', 'top/top1.png');
+            this.load.image('top2', 'top/top2.png');
+            this.load.image('top3', 'top/top3.png');
+            this.load.image('top4', 'top/top4.png');
+            this.load.image('top5', 'top/top5.png');
+            this.load.image('top6', 'top/top6.png');
+            this.load.image('top7', 'top/top7.png');
+            this.load.image('top8', 'top/top8.png');
+            this.load.image('top9', 'top/top9.png');
+
+            this.load.image('slide1', 'slide/slide1.png');
+            this.load.image('slide2', 'slide/slide2.png');
+            this.load.image('slide3', 'slide/slide3.png');
+            this.load.image('slide4', 'slide/slide4.png');
+            this.load.image('slide5', 'slide/slide5.png');
+            this.load.image('slide6', 'slide/slide6.jpg');
+            this.load.image('slide7', 'slide/slide7.png');
+            this.load.image('slide8', 'slide/slide8.png');
+            this.load.image('slide9', 'slide/slide9.png');
+            this.load.image('slide10', 'slide/slide10.png');
+            this.load.image('slide11', 'slide/slide11.png');
+            this.load.image('slide12', 'slide/slide12.png');
+            this.load.image('slide13', 'slide/slide13.png');
+            this.load.image('slide14', 'slide/slide14.png');
+
+            this.load.image('board1', 'board/board1.png');
+            this.load.image('board2', 'board/board2.png');
+            this.load.image('board3', 'board/board3.png');
+            this.load.image('board4', 'board/board4.png');
+            this.load.image('board5', 'board/board5.png');
+        }
+
+        function create() { // 생성될 시 한번만 실행
+            var platforms = this.physics.add.staticGroup(); // 지형 그룹
+            platforms.create(570, 45, 'logo1').setScale(1).refreshBody(); // 지형
+            platforms.create(1010, 35, 'logo2').setScale(1).refreshBody(); // 지형
+            platforms.create(1077, 35, 'logo3').setScale(1).refreshBody(); // 지형
+            platforms.create(1145, 34, 'logo4').setScale(1).refreshBody(); // 지형
+            platforms.create(1210, 35, 'logo5').setScale(1).refreshBody(); // 지형
+            platforms.create(1355, 35, 'logo6').setScale(1).refreshBody(); // 지형
+
+            platforms.create(510, 135, 'top1').setScale(1).refreshBody(); // 발판
+            platforms.create(598, 135, 'top2').setScale(1).refreshBody(); // 발판
+            platforms.create(715, 135, 'top3').setScale(1).refreshBody(); // 발판
+            platforms.create(833, 134, 'top4').setScale(1).refreshBody(); // 발판
+            platforms.create(930, 135, 'top5').setScale(1).refreshBody(); // 발판
+            platforms.create(1020, 135, 'top6').setScale(1).refreshBody(); // 발판
+            platforms.create(1113, 135, 'top7').setScale(1).refreshBody(); // 발판
+            platforms.create(1215, 134, 'top8').setScale(1).refreshBody(); // 발판
+            platforms.create(1340, 135, 'top9').setScale(1).refreshBody(); // 발판
+
+            platforms.create(1297, 354, 'board1').setScale(1).refreshBody(); // 발판
+            platforms.create(1297, 666, 'board2').setScale(1).refreshBody(); // 발판
+            platforms.create(770, 1120, 'board3').setScale(1).refreshBody(); // 발판
+            platforms.create(510, 890, 'board4').setScale(1).refreshBody(); // 발판
+            platforms.create(822, 890, 'board5').setScale(1).refreshBody(); // 발판
+
+            platforms.create(950, 1420, 'bottom1').setScale(1).refreshBody(); // 발판
+            platforms.create(952, 1550, 'bottom2').setScale(1).refreshBody(); // 발판
+
+            var button = this.physics.add.image(1345, 90, 'button').setScale(0.4);
+
+            var dead = this.physics.add.staticGroup();
+            dead.create(180, 1425, 'white').setScale(1.1).refreshBody();
+            dead.create(1100, 500, 'white').setScale(0.3).refreshBody();
+            dead.create(1660, 1050, 'white').setScale(0.8).refreshBody();
+
+            var disappear = this.physics.add.staticGroup();
+
+            var white3 = this.physics.add.staticGroup();
+            white3.create(770, 510, 'white3').setScale(1.25).refreshBody();
+            white3.create(1300, 1110, 'white3').setScale(0.6).refreshBody();
+
+            var item = this.physics.add.sprite(600, 900, 'box').setScale(0.2); // 아이템 객체
+            var door = this.physics.add.sprite(1580, 1300, 'door').setScale(0.2);
+
+            character = this.physics.add.sprite(500, 100, 'character').setScale(0.8);
+            this.anims.create({
+                key: 'left',
+                frames: this.anims.generateFrameNumbers('character', { start: 9, end: 17 }),
+                frameRate: 20,
+                repeat: -1
+            });
+
+            this.anims.create({
+                key: 'right',
+                frames: this.anims.generateFrameNumbers('character', { start: 18, end: 26 }),
+                frameRate: 20,
+                repeat: -1
+            });
+
+            this.anims.create({
+                key: 'stop',
+                frames: this.anims.generateFrameNumbers('character', { start: 0, end: 0 }),
+                frameRate: 20,
+                repeat: -1
+            });
+
+            this.anims.create({
+                key: 'slide',
+                frames: [
+                    { key: 'slide1' },
+                    { key: 'slide2' },
+                    { key: 'slide3' },
+                    { key: 'slide4' },
+                    { key: 'slide5', duration: 50 }
+                ],
+                frameRate: 1,
+                repeat: -1
+            });
+
+            this.add.sprite(770, 510, 'slide1').play('slide');
+
+            this.anims.create({
+                key: 'everyThing',
+                frames: [
+                    { key: 'slide6' },
+                    { key: 'slide7' },
+                    { key: 'slide8' },
+                    { key: 'slide9' },
+                    { key: 'slide10' },
+                    { key: 'slide11' },
+                    { key: 'slide12' },
+                    { key: 'slide13' },
+                    { key: 'slide14', duration: 50 }
+                ],
+                frameRate: 1,
+                repeat: -1
+            });
+
+            this.add.sprite(1300, 1110, 'slide6').play('everyThing');
+
+            scoreText = this.add.text(30, 20, 'coin : 0', { fontSize: '50px', fill: '#000' });
+
+            character.setBounce(0.2);
+            character.setFriction(0.5)
+            character.setCollideWorldBounds(true); // 월드와의 충돌 여부
+
+            this.physics.add.collider(character, platforms); // 지형 그룹과 충돌 판정 설정
+            this.physics.add.collider(item, platforms); // 지형 그룹과 충돌 판정 설정
+            this.physics.add.collider(door, platforms);
+            this.physics.add.collider(button, platforms);
+
+            this.physics.add.collider(character, item);
+
+            this.physics.add.collider(character, white3);
+
+            this.physics.add.overlap(character, dead, (character, dead) => {
+                location.reload();
+            });
+
+            this.physics.add.overlap(character, door, (character, door) => {
+                if (score == 1) {
+                    alert('Game Clear!');
+                    location.href = "../project2/project2.html";
+                } else {
+                    alert('코인이 있어야 합니다. 다시 플레이하세요.')
+                    location.reload();
+                }
+            });
+
+            this.physics.add.overlap(character, button, (character, button) => {
+                if (confirm('버튼을 누르시겠습니까?')) {
+                    platforms.create(340, 230, 'tile').setScale(0.1).refreshBody();
+                    platforms.create(230, 360, 'tile').setScale(0.1).refreshBody();
+                    platforms.create(150, 470, 'tile').setScale(0.1).refreshBody();
+                    platforms.create(330, 580, 'tile').setScale(0.1).refreshBody();
+                    platforms.create(250, 800, 'tile').setScale(0.1).refreshBody();
+                    platforms.create(380, 1000, 'tile').setScale(0.1).refreshBody();
+                    button.disableBody(true);
+                    button.visible = false;
+                    alert('누르셨습니다.');
+                }
+            });
+
+            this.physics.add.overlap(character, item, (character, item) => { // 아이템과 충돌 이벤트
+                item.disableBody(true, true) // 아이템을 삭제함
+                alert('퍼즐을 발견했습니다!')
+                var result = prompt('개발자의 이름을 적어주세요.(2명)', '')
+                if (result.indexOf('이유진') != -1 && result.indexOf('이채원') != -1) {
+                    alert('축하드립니다! 코인을 얻으셨습니다.');
+                    var coin = this.physics.add.sprite(1000, 900, 'coin').setScale(4);
+                    this.anims.create({
+                        key: 'spin',
+                        frames: this.anims.generateFrameNumbers('coin', { start: 0, end: 6 }),
+                        frameRate: 10,
+                        repeat: 4,
+                    });
+                    coin.anims.play('spin', true);
+                    let cc = localStorage.getItem("coin")
+                    cc++;
+                    localStorage.setItem("coin",cc)
+                    score = localStorage.getItem("coin")
+                    scoreText.setText('coin : ' + score);
+                } else alert('오, 저런!')
+            }, null, this);
+
+            cursors = this.input.keyboard.createCursorKeys();//키 이벤트를 받아오기 위한 객체
+
+            this.character = character; // 멤버 변수로 넣어줌으로써 update에서 사용할 수 있도록 함
+        }
+
+        function update() {
+            // 틱마다 계속 갱신되는 곳
+            if (cursors.left.isDown) { // 왼쪽 화살표 키를 눌렀을 시
+                character.setVelocityX(character.body.velocity.x + (-200 - this.character.body.velocity.x) / 10); // 왼쪽으로 힘을 줌 (-200)
+                character.anims.play('left', true);
+            }
+            else if (cursors.right.isDown) { // 오른쪽 화살표 키를 눌렀을 시
+                character.setVelocityX(character.body.velocity.x + (200 - this.character.body.velocity.x) / 10); // 오른쪽으로 힘을 줌 (200)
+                character.anims.play('right', true);
+            }
+            else { // 아무 키도 누르지 않았을 시
+                character.setVelocityX(character.body.velocity.x - this.character.body.velocity.x / 20); // 강제 제동 (0)
+                character.anims.play('stop', true);
+            }
+            if (cursors.up.isDown && character.body.touching.down) { // 위쪽 화살표 키를 눌렀으며 지면과 충돌하고 있을 시
+                character.setVelocityY(-500); // 위쪽으로 힘을 줌
+            }
+            if(character.y>700){
+                window.scrollTo(0,1500);
+            }
+        }
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>NAVER</title>
+    <script src="phaser.min.js"></script>
+</head>
+<body>
+    <script>
+
+        var Main = {
+            preload() {
+                this.load.spritesheet('character', 
+                    'character spritesheet.png',
+                    {frameWidth: 30, frameHeight: 50 }
+                );
+                this.load.image('white','white.png');
+                this.load.image('naver_logo','naver logo.png');
+                this.load.image('naver_menu','naver menu.PNG');
+                this.load.image('naver_advertisement','naver advertisement.PNG');
+                this.load.image('naver_login','naver login.PNG');
+                this.load.image('naver_news','naver news.PNG');
+                this.load.image('naver_news2','naver news2.PNG');
+                this.load.image('naver_advertisement2','naver advertisement2.PNG');
+                this.load.image('naver_weather','naver weather.PNG');
+                this.load.image('naver_search','naver search.PNG');
+                this.load.image('naver_startpage','naver startpage.PNG');
+                this.load.image('door','door.png');
+                this.load.image('line','line.png');
+                this.load.image('naver_shopping','naver shopping.PNG');
+                this.load.image('box','naver box.png');
+                this.load.image('key','key.png');
+                this.load.image('naver_animal','naver animal.PNG');
+            },
+            create() {
+
+                var background = this.physics.add.staticGroup();
+                background.create(950,950,'naver_shopping').setScale(0.6);
+                background.create(this.game.canvas.width/2, 135,'naver_menu').setScale(0.6);
+
+                var white = this.physics.add.staticGroup();
+                white.create(120,1290,'white').setScale(0.5).refreshBody();
+                //white.create(370,1290,'white').setScale(0.5).refreshBody();
+                white.create(680,1290,'white').setScale(0.5).refreshBody();
+                //white.create(880,1290,'white').setScale(0.5).refreshBody();
+                white.create(1110,1290,'white').setScale(0.5).refreshBody();
+                //white.create(1130,1290,'white').setScale(0.5).refreshBody();
+
+                var platforms = this.physics.add.staticGroup(); //지형 그룹
+                
+                platforms.create(950,1250,'line').setScale(0.6).refreshBody();
+                platforms.create(950, 550,'naver_advertisement2').setScale(0.6).refreshBody();
+                platforms.create(400, 235,'naver_advertisement').setScale(0.6).refreshBody();
+                platforms.create(1100,20,'naver_startpage').setScale(0.6).refreshBody();
+                platforms.create(600, 60,'naver_search').setScale(0.7).refreshBody();
+                platforms.create(950, 235,'naver_login').setScale(0.6).refreshBody();
+                platforms.create(400, 335,'naver_news').setScale(0.6).refreshBody();
+                platforms.create(950, 385,'naver_weather').setScale(0.6).refreshBody();
+                platforms.create(400, 500,'naver_news2').setScale(0.6).refreshBody();
+                platforms.create(850,995,'box').setScale(0.6).refreshBody();
+                platforms.create(950,995,'box').setScale(0.6).refreshBody();
+                platforms.create(1050,995,'box').setScale(0.6).refreshBody();
+                platforms.create(850,845,'box').setScale(0.6).refreshBody();
+                platforms.create(950,845,'box').setScale(0.6).refreshBody();
+                platforms.create(1050,845,'box').setScale(0.6).refreshBody();
+                platforms.create(850,1145,'box').setScale(0.6).refreshBody();
+                platforms.create(950,1145,'box').setScale(0.6).refreshBody();
+                platforms.create(1050,1145,'box').setScale(0.6).refreshBody();
+                platforms.create(200, 50, 'naver_logo').setScale(0.7).refreshBody();
+                platforms.create(400,950,'naver_animal').setScale(0.6).refreshBody();
+
+                var door = this.physics.add.staticGroup();
+                door.create(950,60,'door').setScale(0.4).refreshBody();
+  
+                var item1 = this.physics.add.staticGroup();
+                item1.create(200, 25, 'key').setScale(0.2).refreshBody();
+                var item2 = this.physics.add.staticGroup();
+                item2.create(1000, 1225, 'key').setScale(0.2).refreshBody();
+                var item3 = this.physics.add.staticGroup();
+                item3.create(1200, 700, 'key').setScale(0.2).refreshBody();
+                var item4 = this.physics.add.staticGroup();
+                item4.create(150, 630, 'key').setScale(0.2).refreshBody();
+
+                character = this.physics.add.sprite(100, 100, 'character').setScale(0.5); // 캐릭터 객체
+
+
+                character.setBounce(0.2);
+                character.setFriction(0.5);
+                character.setCollideWorldBounds(true);
+
+                this.physics.add.overlap(character, white, (character, white) => {  //바닥과 닿을 시 게임 오버
+                    //this.add.text(1200,700,'Game Over!',{fontSize:'50px',fill:'#000'});
+                    alert("GAME OVER");
+                    if(confirm('다시 시작하시겠습니까?')){
+                        location.reload();
+                    }
+                    else{
+                        self.close();
+                    }
+                    white.disableBody(true, true);
+                }, null, this);
+
+                this.anims.create({
+                    key: 'left',
+                    frames: this.anims.generateFrameNumbers('character', { start: 0, end: 8 }),
+                    frameRate: 20,
+                    repeat: -1
+                });
+
+                this.anims.create({
+                    key: 'turn',
+                    frames: this.anims.generateFrameNumbers('character', { start: 0, end: 0 }),
+                    frameRate: 20,
+                    repeat : -1
+                });
+
+                this.anims.create({
+                    key: 'right',
+                    frames: this.anims.generateFrameNumbers('character', { start: 9, end: 17 }),
+                    frameRate: 20,
+                    repeat: -1
+                });
+
+                this.physics.add.collider(character, platforms);
+
+                this.physics.add.overlap(character, item1, (character, item1) => { 
+                    alert("아침에는 네 발 점심에는 두 발 저녁에는 세 발인것은?");
+                    var password1 = prompt();
+                    if (password1 == '인간' || password1 == '사람'){
+                        alert("첫번째 비밀번호 : 1");
+                    }
+                    else{
+                        alert("정답이 아닙니다.");
+                    }
+                    item1.disableBody(true, true);
+                }, null, this);
+
+                this.physics.add.overlap(character, item2, (character, item2) => { 
+                    alert("소가 계단을 오르면?");
+                    var password2 = prompt();
+                    if (password2 == '소오름'){
+                        alert("두번째 비밀번호 : 5");
+                    }
+                    else{
+                        alert("정답이 아닙니다.");
+                    }
+                    item2.disableBody(true, true);
+                }, null, this);
+
+                this.physics.add.overlap(character, item3, (character, item3) => { 
+                    alert("원주율의 소숫점 7번째 자리 수는?");
+                    var password3 = prompt();
+                    if (password3 == '6'){
+                        alert("세번째 비밀번호 : 7");
+                    }
+                    else{
+                        alert("정답이 아닙니다.");
+                    }
+                    item3.disableBody(true, true);
+                }, null, this);
+
+                this.physics.add.overlap(character, item4, (character, item4) => { 
+                    alert("빌게이츠는 노래를 어떻게 부를까?");
+                    var password4 = prompt('1.열심히    2.마이크로 소프트하게');
+                    if (password4 == 2){
+                        alert("네번째 비밀번호 : 0");
+                    }
+                    item4.disableBody(true, true);
+                }, null, this);
+
+
+                this.physics.add.overlap(character, door, (character, door) => {
+                    var password = prompt('비밀번호');
+                    if(password == '1570'){
+                        alert("Stage Clear");
+                        location.href = "../project3/project3.html?coin = score";
+                    }
+                    else{
+                        alert("비밀번호가 틀렸습니다.");
+                    }
+                    door.disableBody(true, true);
+                }, null, this);
+
+                this.character = character;
+                this.cursors = this.input.keyboard.createCursorKeys();
+            },
+            update() { // 틱마다 계속 갱신되는 곳
+                if (this.cursors.left.isDown) { // 왼쪽 화살표 키를 눌렀을 시
+                    this.character.setVelocityX(this.character.body.velocity.x + (-200 - this.character.body.velocity.x) / 10); // 왼쪽으로 힘을 줌 (-200)
+                    character.anims.play("left", true);
+                }
+                else if (this.cursors.right.isDown) { // 오른쪽 화살표 키를 눌렀을 시
+                    this.character.setVelocityX(this.character.body.velocity.x + (200 - this.character.body.velocity.x) / 10); // 오른쪽으로 힘을 줌 (200)
+                    character.anims.play("right", true);
+                }
+                else { // 아무 키도 누르지 않았을 시
+                    this.character.setVelocityX(this.character.body.velocity.x - this.character.body.velocity.x / 20); // 강제 제동 (0)
+                    character.anims.play("turn", true);
+                }
+                if (this.cursors.up.isDown && this.character.body.touching.down) { // 위쪽 화살표 키를 눌렀으며 지면과 충돌하고 있을 시
+                    this.character.setVelocityY(-500); // 위쪽으로 힘을 줌
+                }
+            }
+        }
+
+        var config = {
+            type: Phaser.AUTO,
+            width: 1250,
+            height: 1300,
+            backgroundColor:'#fff',
+            physics: {
+                default : 'arcade',
+                arcade: {
+                    gravity: {y: 600},
+                    debug: false
+                }
+            },
+            scene: [Main],
+        };
+
+        //function nextPage() {
+        //document.id.action="예시.html";
+        //document.id.submit();
+        //}
+        var score = 2;
+        let game = new Phaser.Game(config);
+        alert("STAGE2");
+    </script>
+</body>
+</html>
